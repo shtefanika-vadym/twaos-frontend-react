@@ -1,0 +1,14 @@
+.parent {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  height: 100vh;
+  padding: 30px;
+
+  &Paper {
+    width: 100%;
+    height: min-content;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+}

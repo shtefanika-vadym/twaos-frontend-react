@@ -1,2 +1,1 @@
-export { store } from './store'
-export { baseQuery } from './utils/base-query'
+export { store } from 'app/store/store'

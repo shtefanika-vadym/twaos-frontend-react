@@ -8,6 +8,7 @@ export default defineConfig({
   resolve: {
     alias: {
       app: '/src/app',
+      common: '/src/common',
       features: '/src/features',
     },
   },

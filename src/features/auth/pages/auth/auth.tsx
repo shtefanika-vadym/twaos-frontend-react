@@ -1,5 +1,7 @@
 import { AuthContent } from 'features/auth/components/auth-content/auth-content'
 
-export const Auth = () => {
+const Auth = () => {
   return <AuthContent />
 }
+
+export default Auth

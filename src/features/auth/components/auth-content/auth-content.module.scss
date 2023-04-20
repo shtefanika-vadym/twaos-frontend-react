@@ -1,14 +1,27 @@
-.parent {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  height: 100vh;
-  padding: 30px;
+@import "src/app/style/responsive";
 
-  &Paper {
+.parent {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+
+  &Background {
+    background-color: rgba(39, 47, 84, 1);
+    @include device(smallOnly) {
+      display: none !important;
+    }
+  }
+
+  &Background,
+  &Form {
+    flex: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &FormContent {
     width: 100%;
-    height: min-content;
     max-width: 500px;
-    margin: 0 auto;
   }
 }

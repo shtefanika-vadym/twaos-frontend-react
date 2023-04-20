@@ -1,5 +1,7 @@
 import { HomeContent } from 'features/home/components/home-content/home-content'
 
-export const Home = () => {
+const Home = () => {
   return <HomeContent />
 }
+
+export default Home

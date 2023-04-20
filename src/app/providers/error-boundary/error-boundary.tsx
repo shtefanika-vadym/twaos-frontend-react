@@ -1,6 +1,10 @@
 import type { ErrorInfo, ReactNode } from 'react'
 import { Component } from 'react'
 
+import { Box, Button, Card, Text } from '@mantine/core'
+
+import styles from './error-boundary.module.scss'
+
 interface IProps {
   children: ReactNode
 }
@@ -32,7 +36,19 @@ export class ErrorBoundary extends Component<IProps, IState> {
     const { hasError } = this.state
 
     if (hasError) {
-      return <p>Error page</p>
+      return (
+        <Box className={styles.parent}>
+          <Card shadow='md' padding='lg' radius='lg'>
+            <Text weight={700}>Oops! Something went wrong.</Text>
+            <Text size='sm' mt={2}>
+              Were sorry, but an unexpected error occurred. Please try again later.
+            </Text>
+            <Button onClick={this.handleReloadPage} variant='outline' color='blue' mt={10}>
+              Reload page
+            </Button>
+          </Card>
+        </Box>
+      )
     }
 
     return children

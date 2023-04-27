@@ -33,8 +33,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } else if (data.email.includes('secretary')) {
       window.location.reload()
       setUser({ token: 'dsds', role: 'secretary' })
+    } else if (data.email.includes('admin')) {
+      window.location.reload()
+      setUser({ token: 'dsds', role: 'admin' })
     } else if (Object.hasOwn(response, RESPONSE_PROPERTY.ERROR))
-      showNotification('Login error', response.error.data, RESPONSE_PROPERTY.ERROR)
+      showNotification({
+        title: 'Login error',
+        message: response.error.data,
+        type: RESPONSE_PROPERTY.ERROR,
+      })
   }
 
   const handleLogout = (): void => {

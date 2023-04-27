@@ -29,6 +29,7 @@
     "no-shadow": "off",
     "no-useless-escape": "off",
     "react-hooks/rules-of-hooks": "off",
+    "no-extra-boolean-cast": "off",
     "no-param-reassign": [
       "error",
       {

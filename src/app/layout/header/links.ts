@@ -7,4 +7,8 @@ export const LINKS = [
     link: '/account',
     label: 'Account',
   },
+  {
+    link: '/users',
+    label: 'Users',
+  },
 ]

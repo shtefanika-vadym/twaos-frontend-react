@@ -1,5 +1,7 @@
 import { Navigate, Outlet } from 'react-router-dom'
 
+import { Container, Group } from '@mantine/core'
+
 import { useAuth } from 'app/hooks/use-auth'
 import { Header } from 'app/layout'
 import { UNAUTHORIZED_PATHS } from 'app/routes/config/unauthorized-config'
@@ -10,9 +12,11 @@ export const AuthorizedRoutes = () => {
   if (!user) return <Navigate to={UNAUTHORIZED_PATHS.LOGIN} />
 
   return (
-    <div className='application-layout__content'>
+    <Container>
       <Header />
-      <Outlet />
-    </div>
+      <Group mt={30}>
+        <Outlet />
+      </Group>
+    </Container>
   )
 }

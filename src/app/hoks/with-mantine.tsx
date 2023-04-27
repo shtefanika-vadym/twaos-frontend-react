@@ -1,6 +1,7 @@
 import type { ComponentType, FC } from 'react'
 
 import { MantineProvider } from '@mantine/core'
+import { ModalsProvider } from '@mantine/modals'
 import { Notifications } from '@mantine/notifications'
 
 export const withMantine = <T extends object>(Component: ComponentType<T>): FC<T> => {
@@ -8,7 +9,9 @@ export const withMantine = <T extends object>(Component: ComponentType<T>): FC<T
     return (
       <MantineProvider withGlobalStyles withNormalizeCSS>
         <Notifications />
-        <Component {...props} />
+        <ModalsProvider>
+          <Component {...props} />
+        </ModalsProvider>
       </MantineProvider>
     )
   }

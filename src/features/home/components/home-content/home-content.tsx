@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import { Button, Container, Flex, Group, Modal, Textarea, Title } from '@mantine/core'
+import { Button, Flex, Group, Modal, Textarea, Title } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useDisclosure } from '@mantine/hooks'
 import { IconFileAnalytics } from '@tabler/icons-react'
@@ -58,37 +58,35 @@ export const HomeContent = () => {
   }
 
   return (
-    <Container>
-      <Flex gap={10} direction='column'>
-        <Modal centered opened={opened} onClose={close} title={HOME_CONSTANTS.CREATE_CERTIFICATE}>
-          <form onSubmit={form.onSubmit(handleSubmit)}>
-            <Textarea
-              required
-              autosize
-              radius='md'
-              label={HOME_CONSTANTS.REASON}
-              placeholder={HOME_CONSTANTS.REASON_PLACEHOLDER}
-              {...form.getInputProps('reason')}
-            />
-            <Group position='right' mt='xl'>
-              <Button type='submit' radius='md'>
-                {HOME_CONSTANTS.CREATE}
-              </Button>
-            </Group>
-          </form>
-        </Modal>
-        <Title order={1}>{HOME_CONSTANTS.TITLE}</Title>
-        <MantineReactTable
-          columns={columns as any}
-          data={data}
-          renderTopToolbarCustomActions={() => (
-            <Button color='teal' onClick={open} variant='filled'>
-              <IconFileAnalytics size='1rem' />
-              {HOME_CONSTANTS.CREATE_CERTIFICATE}
+    <Flex w='100%' gap={10} direction='column'>
+      <Modal centered opened={opened} onClose={close} title={HOME_CONSTANTS.CREATE_CERTIFICATE}>
+        <form onSubmit={form.onSubmit(handleSubmit)}>
+          <Textarea
+            required
+            autosize
+            radius='md'
+            label={HOME_CONSTANTS.REASON}
+            placeholder={HOME_CONSTANTS.REASON_PLACEHOLDER}
+            {...form.getInputProps('reason')}
+          />
+          <Group position='right' mt='xl'>
+            <Button type='submit' radius='md'>
+              {HOME_CONSTANTS.CREATE}
             </Button>
-          )}
-        />
-      </Flex>
-    </Container>
+          </Group>
+        </form>
+      </Modal>
+      <Title order={1}>{HOME_CONSTANTS.TITLE}</Title>
+      <MantineReactTable
+        columns={columns as any}
+        data={data}
+        renderTopToolbarCustomActions={() => (
+          <Button color='teal' onClick={open} variant='filled'>
+            <IconFileAnalytics size='1rem' />
+            {HOME_CONSTANTS.CREATE_CERTIFICATE}
+          </Button>
+        )}
+      />
+    </Flex>
   )
 }

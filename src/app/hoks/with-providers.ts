@@ -7,9 +7,9 @@ import { withRouter } from 'app/hoks/with-router'
 import { withStore } from 'app/hoks/with-store'
 
 export const withProviders = compose(
+  withStore,
+  withRouter,
   withAuth,
   withMantine,
-  withRouter,
-  withStore,
   withErrorBoundary,
 )

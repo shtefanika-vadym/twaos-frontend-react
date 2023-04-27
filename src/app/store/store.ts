@@ -9,7 +9,7 @@ const rootReducer = combineReducers({
 
 export const store = configureStore({
   reducer: rootReducer,
-  middleware: (getDefaultMiddleware: CurriedGetDefaultMiddleware<any>) =>
+  middleware: (getDefaultMiddleware: CurriedGetDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
     }).concat(StateUtils.getAppMiddlewareList()),

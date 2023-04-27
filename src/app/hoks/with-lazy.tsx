@@ -3,7 +3,7 @@ import { lazy } from 'react'
 
 import { withSuspense } from 'app/hoks/with-suspense'
 
-export const withLazy = <T,>(
+export const withLazy = <T extends object>(
   factory: () => Promise<{ default: ComponentType<T> }>,
   fallback = false,
 ) => {

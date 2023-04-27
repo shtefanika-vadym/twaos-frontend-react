@@ -6,6 +6,6 @@ import { AUTHORIZED_PATHS } from 'app/routes/config/authorized-config'
 export const UnauthorizedRoutes = () => {
   const { user } = useAuth()
 
-  if (!user) return <Navigate to={AUTHORIZED_PATHS.HOME} />
+  if (user) return <Navigate to={AUTHORIZED_PATHS.HOME} />
   return <Outlet />
 }

@@ -3,6 +3,7 @@ import { NavLink, useLocation } from 'react-router-dom'
 import { Button, Container, Group } from '@mantine/core'
 import { IconLogout } from '@tabler/icons-react'
 
+import { useAuth } from 'app/hooks'
 import { LINKS } from 'app/layout/header/links'
 
 import logo from 'common/assets/logo.png'
@@ -12,6 +13,7 @@ import { ALT_CONSTANTS } from 'common/constants'
 import { useHeaderStyles } from './header-styles'
 
 export function Header() {
+  const { handleLogout } = useAuth()
   const { pathname } = useLocation()
   const { classes: styles, cx: classNames } = useHeaderStyles()
 
@@ -28,7 +30,7 @@ export function Header() {
           </NavLink>
         ))}
       </Group>
-      <Button variant='white'>
+      <Button onClick={handleLogout} variant='white'>
         <IconLogout className={styles.logout} size='1.2rem' stroke={1.5} />
         Logout
       </Button>

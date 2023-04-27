@@ -4,7 +4,7 @@ import { MantineProvider } from '@mantine/core'
 import { Notifications } from '@mantine/notifications'
 
 export const withMantine = <T extends object>(Component: ComponentType<T>): FC<T> => {
-  const WithMantineWrapper: FC<T> = (props) => {
+  const WithMantineWrapper: FC<T> = (props: T) => {
     return (
       <MantineProvider withGlobalStyles withNormalizeCSS>
         <Notifications />

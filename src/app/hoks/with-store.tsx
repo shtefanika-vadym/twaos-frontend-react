@@ -4,7 +4,7 @@ import { Provider } from 'react-redux'
 import { store } from 'app/store'
 
 export const withStore = <T extends object>(Component: ComponentType<T>): FC<T> => {
-  const WithStoreWrapper: FC<T> = (props) => {
+  const WithStoreWrapper: FC<T> = (props: T) => {
     return (
       <Provider store={store}>
         <Component {...props} />

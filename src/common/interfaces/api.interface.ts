@@ -71,3 +71,11 @@ export type ITriggerPagRequest<T> = [
   }>,
   IRequestPagResponse<T>,
 ]
+
+export type ApiResponse<T = any> = {
+  data?: T
+  error?: {
+    status: number
+    data: string[]
+  }
+}

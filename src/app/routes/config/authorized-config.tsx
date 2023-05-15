@@ -1,5 +1,7 @@
-import type { RouteProps } from 'react-router-dom'
 import { Navigate } from 'react-router-dom'
+
+import { USER_ROLES } from 'common/constants'
+import type { IRoute, INavLink } from 'common/interfaces'
 
 import { Account } from 'features/account'
 import { Home } from 'features/home'
@@ -17,18 +19,37 @@ export const AUTHORIZED_PATHS: Record<AUTHORIZED_ROUTES, string> = {
   [AUTHORIZED_ROUTES.ACCOUNT]: '/account',
 }
 
-export const AUTHORIZED_ROUTE_CONFIG: RouteProps[] = [
+export const AUTHORIZED_NAVIGATION: INavLink[] = [
   {
-    path: AUTHORIZED_PATHS.HOME,
+    label: 'Home',
+    link: AUTHORIZED_PATHS.HOME,
+    restrictedFor: [USER_ROLES.ADMIN],
+  },
+  {
+    label: 'Users',
+    link: AUTHORIZED_PATHS.USERS,
+    restrictedFor: [USER_ROLES.SECRETARY, USER_ROLES.STUDENT],
+  },
+  {
+    label: 'Account',
+    link: AUTHORIZED_PATHS.ACCOUNT,
+  },
+]
+
+export const AUTHORIZED_ROUTE_CONFIG: IRoute[] = [
+  {
     element: <Home />,
+    path: AUTHORIZED_PATHS.HOME,
+    restrictedFor: [USER_ROLES.ADMIN],
   },
   {
-    path: AUTHORIZED_PATHS.ACCOUNT,
     element: <Account />,
+    path: AUTHORIZED_PATHS.ACCOUNT,
   },
   {
-    path: AUTHORIZED_PATHS.USERS,
     element: <Users />,
+    path: AUTHORIZED_PATHS.USERS,
+    restrictedFor: [USER_ROLES.SECRETARY, USER_ROLES.STUDENT],
   },
   {
     path: '*',

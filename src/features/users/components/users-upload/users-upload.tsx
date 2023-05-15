@@ -14,6 +14,7 @@ export const UsersUpload = () => {
 
   const openDeleteModal = (): void => {
     modals.openConfirmModal({
+      size: 'lg',
       radius: 'md',
       modalId: 'upload-users-modal',
       title: USERS_CONSTANTS.UPDATE_USERS,

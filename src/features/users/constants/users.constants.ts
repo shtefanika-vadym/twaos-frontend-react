@@ -1,11 +1,15 @@
 export const USERS_CONSTANTS = {
-  USERS: 'USERS',
+  USERS: 'Users',
   UPDATE: 'Update',
+  FACULTY: 'Faculty name',
+  FACULTY_PLACEHOLDER: 'FIESC',
   UPDATE_USERS: 'Update users',
+  UPLOAD_STUDENTS: '1. Upload students',
+  UPLOAD_SECRETARIES: '2.  Upload secretaries',
   UPDATE_USERS_CANCEL: "No don't update it",
   UPLOAD_ERROR: 'Upload users failed',
   UPLOAD_SUCCESS: 'Upload users success',
-  UPLOAD_INFO: 'Upload a .xlsx with the old users will be deleted automatically',
+  UPLOAD_INFO: 'After submit old users will be deleted automatically',
   DRAG_USERS: 'Drag file with users here or click to select files',
-  CONCATENATE_Q: 'Concatenate the name with the first name',
+  CONCATENATE: 'Concatenate the name with the first name',
 }

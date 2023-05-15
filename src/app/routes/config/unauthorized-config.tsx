@@ -1,5 +1,6 @@
-import type { RouteProps } from 'react-router-dom'
 import { Navigate } from 'react-router-dom'
+
+import type { IRoute } from 'common/interfaces'
 
 import { Auth } from 'features/auth'
 
@@ -11,7 +12,7 @@ export const UNAUTHORIZED_PATHS: Record<UNAUTHORIZED_ROUTES, string> = {
   [UNAUTHORIZED_ROUTES.LOGIN]: '/login',
 }
 
-export const UNAUTHORIZED_ROUTE_CONFIG: RouteProps[] = [
+export const UNAUTHORIZED_ROUTE_CONFIG: IRoute[] = [
   {
     path: UNAUTHORIZED_PATHS.LOGIN,
     element: <Auth />,

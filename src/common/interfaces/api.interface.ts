@@ -13,7 +13,7 @@ export interface ITriggerResponse {
   }
 }
 
-export interface IRequestResponse<T = void> {
+export interface IRequestResponse<T = any> {
   requestId: string
   data?: T
   error?:

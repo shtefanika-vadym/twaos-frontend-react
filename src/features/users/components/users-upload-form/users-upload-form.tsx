@@ -1,10 +1,10 @@
 import type { FC } from 'react'
 import type { FileWithPath } from 'react-dropzone'
 
-import { Checkbox, Group, rem, Text } from '@mantine/core'
+import { Checkbox, Flex, Group, rem, Text, TextInput, Title } from '@mantine/core'
 import { Dropzone, MS_EXCEL_MIME_TYPE } from '@mantine/dropzone'
 import { useForm } from '@mantine/form'
-import { IconPhoto } from '@tabler/icons-react'
+import { IconAlignJustified, IconPhoto } from '@tabler/icons-react'
 
 import { Show } from 'common/components'
 import { RESPONSE_PROPERTY } from 'common/constants'
@@ -36,49 +36,103 @@ export const UsersUploadForm: FC<IProps> = ({ handleSubmit }) => {
     })
   }
 
-  const handleDropFile = (files: FileWithPath[]): void => {
+  const handleShowSuccessUpload = (): void => {
     showNotification({
       title: USERS_CONSTANTS.UPLOAD_SUCCESS,
       message: USERS_CONSTANTS.UPLOAD_SUCCESS,
       type: RESPONSE_PROPERTY.SUCCESS,
     })
+  }
+
+  const handleDropStudentsFile = (files: FileWithPath[]): void => {
+    handleShowSuccessUpload()
     form.setFieldValue(USERS_FORM_KEYS_CONSTANTS.USERS_FILE, files.at(0))
+  }
+
+  const handleDropSecretariesFile = (files: FileWithPath[]): void => {
+    handleShowSuccessUpload()
+    form.setFieldValue(USERS_FORM_KEYS_CONSTANTS.SECRETARIES_FILE, files.at(0))
   }
 
   return (
     <form id='upload-users' onSubmit={form.onSubmit(handleSubmit)}>
-      <Group position='left' mt='xl' mb='xl'>
+      <Flex w='100%' direction='column' rowGap='lg' mt='sm' mb='xl'>
         <Text color='green' size='sm' inline>
           {USERS_CONSTANTS.UPLOAD_INFO}
         </Text>
-        <Dropzone
-          multiple={false}
-          onDrop={handleDropFile}
-          onReject={handleRejectUpload}
-          maxSize={3 * 1024 ** 2}
-          accept={MS_EXCEL_MIME_TYPE}>
-          <Group
-            position='center'
-            spacing='sm'
-            style={{ minHeight: rem(40), pointerEvents: 'none' }}>
-            <Dropzone.Idle>
-              <IconPhoto size='3.2rem' stroke={1.5} />
-            </Dropzone.Idle>
-            <Text size='lg' inline>
-              {USERS_CONSTANTS.DRAG_USERS}
+        <Flex direction='column' rowGap='sm'>
+          <Title order={4}>{USERS_CONSTANTS.UPLOAD_STUDENTS}</Title>
+          <Dropzone
+            multiple={false}
+            onDrop={handleDropStudentsFile}
+            onReject={handleRejectUpload}
+            maxSize={3 * 1024 ** 2}
+            accept={MS_EXCEL_MIME_TYPE}>
+            <Group
+              position='center'
+              spacing='sm'
+              style={{ minHeight: rem(40), pointerEvents: 'none' }}>
+              <Dropzone.Idle>
+                <IconPhoto size='3.2rem' stroke={1.5} />
+              </Dropzone.Idle>
+              <Text size='lg' inline>
+                {USERS_CONSTANTS.DRAG_USERS}
+              </Text>
+            </Group>
+          </Dropzone>
+          <Show when={form.errors?.usersFile}>
+            <Text color='red' size='sm' inline>
+              {form.errors?.usersFile}
             </Text>
-          </Group>
-        </Dropzone>
-        <Show when={form.errors?.usersFile}>
-          <Text color='red' size='sm' inline>
-            {form.errors?.usersFile}
-          </Text>
-        </Show>
+          </Show>
+        </Flex>
+
+        <Flex direction='column' rowGap='sm'>
+          <Title order={4}>{USERS_CONSTANTS.UPLOAD_SECRETARIES}</Title>
+          <Dropzone
+            multiple={false}
+            onDrop={handleDropSecretariesFile}
+            onReject={handleRejectUpload}
+            maxSize={3 * 1024 ** 2}
+            accept={MS_EXCEL_MIME_TYPE}>
+            <Group
+              position='center'
+              spacing='sm'
+              style={{ minHeight: rem(40), pointerEvents: 'none' }}>
+              <Dropzone.Idle>
+                <IconPhoto size='3.2rem' stroke={1.5} />
+              </Dropzone.Idle>
+              <Text size='lg' inline>
+                {USERS_CONSTANTS.DRAG_USERS}
+              </Text>
+            </Group>
+          </Dropzone>
+          <Show when={form.errors?.secretariesFile}>
+            <Text color='red' size='sm' inline>
+              {form.errors?.secretariesFile}
+            </Text>
+          </Show>
+        </Flex>
+        <Flex w='100%' rowGap='sm'>
+          <TextInput
+            style={{ width: 'inherit' }}
+            label={USERS_CONSTANTS.FACULTY}
+            icon={<IconAlignJustified size='1rem' />}
+            placeholder={USERS_CONSTANTS.FACULTY_PLACEHOLDER}
+            {...form.getInputProps(USERS_FORM_KEYS_CONSTANTS.FACULTY_NAME)}
+          />
+          <Show when={form.errors?.faculyName}>
+            <Text color='red' size='sm' inline>
+              {form.errors?.faculyName}
+            </Text>
+          </Show>
+        </Flex>
+
         <Checkbox
-          label={USERS_CONSTANTS.CONCATENATE_Q}
+          label={USERS_CONSTANTS.CONCATENATE}
           {...form.getInputProps(USERS_FORM_KEYS_CONSTANTS.CONCATENATE_NAME)}
         />
-      </Group>
+      </Flex>
     </form>
   )
 }

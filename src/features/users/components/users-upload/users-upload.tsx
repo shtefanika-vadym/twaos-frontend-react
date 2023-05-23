@@ -2,14 +2,34 @@ import { Box, Button } from '@mantine/core'
 import { modals } from '@mantine/modals'
 import { IconUpload } from '@tabler/icons-react'
 
+import { useApiResponse } from 'app/hooks'
+
+import type { ApiResponse } from 'common/interfaces'
+
 import { UsersUploadForm } from 'features/users/components/users-upload-form/users-upload-form'
 import { USERS_CONSTANTS } from 'features/users/constants/users.constants'
 import type { IUsersUpload } from 'features/users/schemas/user-upload.schema'
+import { useUpdateAllUsersMutation } from 'features/users/store/api/users.api'
 
 export const UsersUpload = () => {
-  const handleUploadUsers = (data: IUsersUpload): void => {
-    console.info(data)
-    modals.close('upload-users-modal')
+  const { processApiResponse } = useApiResponse()
+  const [updateUsers] = useUpdateAllUsersMutation()
+
+  const handleUploadUsers = async (data: IUsersUpload): Promise<void> => {
+    const { concatenateName, facultyName, usersFile, secretariesFile } = data
+    const formData = new FormData()
+    formData.append('files', usersFile as any)
+    formData.append('files', secretariesFile as any)
+    formData.append('facultyName', facultyName)
+    formData.append('concatenateName', String(concatenateName))
+
+    const response: ApiResponse = await updateUsers(formData)
+    processApiResponse(response, {
+      success: 'Users updated',
+      successCallback: () => {
+        modals.close('upload-users-modal')
+      },
+    })
   }
 
   const openDeleteModal = (): void => {

@@ -3,36 +3,43 @@ import { useMemo } from 'react'
 import { Flex, Title } from '@mantine/core'
 import { MantineReactTable } from 'mantine-react-table'
 
+import type { IRequestResponse } from 'common/interfaces'
+
 import { UsersUpload } from 'features/users/components/users-upload/users-upload'
 import { USERS_CONSTANTS } from 'features/users/constants/users.constants'
+import { useFetchAllUsersQuery } from 'features/users/store/api/users.api'
 
 export const UsersContent = () => {
-  const data = [
-    {
-      id: 'test',
-      status: 'confirmed',
-      date: 'test',
-      reason: 'Pentru Test',
-    },
-  ]
-
+  const { data = [] }: IRequestResponse = useFetchAllUsersQuery()
   const columns = useMemo(
     () => [
       {
-        accessorKey: 'id',
-        header: 'ID',
+        accessorKey: 'first_name',
+        header: 'First name',
       },
       {
-        accessorKey: 'status',
-        header: 'Status',
+        accessorKey: 'last_name',
+        header: 'Last name',
       },
       {
-        accessorKey: 'date',
-        header: 'Date',
+        accessorKey: 'initials',
+        header: 'Initial',
       },
       {
-        accessorKey: 'reason',
-        header: 'Reason',
+        accessorKey: 'program_study',
+        header: 'Study program',
+      },
+      {
+        accessorKey: 'field_study',
+        header: 'Field study',
+      },
+      {
+        accessorKey: 'year_study',
+        header: 'Study year',
+      },
+      {
+        accessorKey: 'faculty_name',
+        header: 'Faculty name',
       },
     ],
     [],
@@ -42,8 +49,8 @@ export const UsersContent = () => {
       <Title order={1}>{USERS_CONSTANTS.USERS}</Title>
 
       <MantineReactTable
-        columns={columns as any}
         data={data}
+        columns={columns}
         renderTopToolbarCustomActions={() => <UsersUpload />}
       />
     </Flex>

@@ -1,9 +1,12 @@
 import type { ReactNode } from 'react'
 import { createContext, useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useLocalStorage } from 'react-use'
 
-import { LOCALE_STORAGE_KEYS, RESPONSE_PROPERTY, USER_ROLES } from 'common/constants'
-import { useNotification } from 'common/hooks'
+import { useApiResponse } from 'app/hooks'
+import { AUTHORIZED_PATHS } from 'app/routes/config/authorized-config'
+
+import { LOCALE_STORAGE_KEYS } from 'common/constants'
 import type { ApiResponse, ITriggerRequest, IUser } from 'common/interfaces'
 
 import type { IAuthLogin } from 'features/auth'
@@ -19,28 +22,20 @@ interface IContextProps {
 export const AuthContext = createContext<IContextProps | null>(null)
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const { showNotification } = useNotification()
+  const navigate = useNavigate()
+  const { processApiResponse } = useApiResponse()
   const [doLogin, { isLoading }]: ITriggerRequest = useLoginMutation()
   const [user, setUser] = useLocalStorage<IUser>(LOCALE_STORAGE_KEYS.USER, null)
 
   const handleLogin = async (data: IAuthLogin) => {
     const response: ApiResponse = await doLogin(data)
-    console.info(response)
-    if (data.email.includes('student')) {
-      setUser({ token: 'dsds', role: USER_ROLES.STUDENT })
-      window.location.reload()
-    } else if (data.email.includes('secretary')) {
-      window.location.reload()
-      setUser({ token: 'dsds', role: USER_ROLES.SECRETARY })
-    } else if (data.email.includes('admin')) {
-      window.location.reload()
-      setUser({ token: 'dsds', role: USER_ROLES.ADMIN })
-    } else if (Object.hasOwn(response, RESPONSE_PROPERTY.ERROR))
-      showNotification({
-        title: 'Login error',
-        message: response.error.data,
-        type: RESPONSE_PROPERTY.ERROR,
-      })
+    processApiResponse(response, {
+      error: 'Login error',
+      successCallback: () => {
+        setUser(response.data)
+        navigate(AUTHORIZED_PATHS.HOME, { replace: true })
+      },
+    })
   }
 
   const handleLogout = (): void => {
@@ -55,7 +50,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       handleLogin,
       handleLogout,
     }),
-    [],
+    [user, isLoading],
   )
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

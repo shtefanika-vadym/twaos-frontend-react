@@ -12,7 +12,7 @@ export const AuthorizedRoutes = () => {
   if (!user) return <Navigate to={UNAUTHORIZED_PATHS.LOGIN} />
 
   return (
-    <Container>
+    <Container size='xl'>
       <Header />
       <Group mt={30}>
         <Outlet />

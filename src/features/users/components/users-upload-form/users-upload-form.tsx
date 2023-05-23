@@ -2,7 +2,7 @@ import type { FC } from 'react'
 import type { FileWithPath } from 'react-dropzone'
 
 import { Checkbox, Flex, Group, rem, Text, TextInput, Title } from '@mantine/core'
-import { Dropzone, MS_EXCEL_MIME_TYPE } from '@mantine/dropzone'
+import { Dropzone } from '@mantine/dropzone'
 import { useForm } from '@mantine/form'
 import { IconAlignJustified, IconPhoto } from '@tabler/icons-react'
 
@@ -67,7 +67,7 @@ export const UsersUploadForm: FC<IProps> = ({ handleSubmit }) => {
             onDrop={handleDropStudentsFile}
             onReject={handleRejectUpload}
             maxSize={3 * 1024 ** 2}
-            accept={MS_EXCEL_MIME_TYPE}>
+            accept={['text/csv']}>
             <Group
               position='center'
               spacing='sm'
@@ -94,7 +94,7 @@ export const UsersUploadForm: FC<IProps> = ({ handleSubmit }) => {
             onDrop={handleDropSecretariesFile}
             onReject={handleRejectUpload}
             maxSize={3 * 1024 ** 2}
-            accept={MS_EXCEL_MIME_TYPE}>
+            accept={['text/csv']}>
             <Group
               position='center'
               spacing='sm'

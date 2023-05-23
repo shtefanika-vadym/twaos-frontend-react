@@ -5,17 +5,22 @@ import { useAuth } from 'app/hooks'
 
 import { Show } from 'common/components'
 import { USER_ROLES } from 'common/constants'
+import type { IRequestResponse } from 'common/interfaces'
 
 import { ACCOUNT_CONSTANTS } from 'features/account/constants/account.constants'
+import { useFetchAccountDetailsQuery } from 'features/account/store/api/account.api'
 
 export const AccountContent = () => {
   const { user } = useAuth()
+  const { data = {} }: IRequestResponse = useFetchAccountDetailsQuery()
+
   return (
     <Flex w='100%' gap={10} direction='column'>
       <Title order={1}>{ACCOUNT_CONSTANTS.ACCOUNT}</Title>
       <TextInput
         disabled
         radius='md'
+        value={data.email}
         icon={<IconAt size='1rem' />}
         label={ACCOUNT_CONSTANTS.EMAIL_LABEL}
         placeholder={ACCOUNT_CONSTANTS.EMAIL_PLACEHOLDER}
@@ -24,6 +29,7 @@ export const AccountContent = () => {
       <TextInput
         disabled
         radius='md'
+        value={data.first_name}
         icon={<IconUser size='1rem' />}
         label={ACCOUNT_CONSTANTS.NAME_LABEL}
         placeholder={ACCOUNT_CONSTANTS.NAME_PLACEHOLDER}
@@ -33,6 +39,7 @@ export const AccountContent = () => {
         <TextInput
           disabled
           radius='md'
+          value={data.faculty_name}
           icon={<IconCoin size='1rem' />}
           label={ACCOUNT_CONSTANTS.FINANCIAL_STATUS_LABEL}
           placeholder={ACCOUNT_CONSTANTS.FINANCIAL_STATUS_PLACEHOLDER}
@@ -43,6 +50,7 @@ export const AccountContent = () => {
         <TextInput
           disabled
           radius='md'
+          value={data.year_study}
           icon={<IconCalendar size='1rem' />}
           label={ACCOUNT_CONSTANTS.YEAR_STUDY_LABEL}
           placeholder={ACCOUNT_CONSTANTS.YEAR_STUDY_PLACEHOLDER}
@@ -53,6 +61,7 @@ export const AccountContent = () => {
         <TextInput
           disabled
           radius='md'
+          value={data.field_study}
           icon={<IconAlignJustified size='1rem' />}
           label={ACCOUNT_CONSTANTS.FIELD_STUDY_LABEL}
           placeholder={ACCOUNT_CONSTANTS.FIELD_STUDY_PLACEHOLDER}

@@ -19,7 +19,7 @@ export const baseQuery =
 
       const result = await axios({
         ...param,
-        baseURL: import.meta.env.REACT_APP_API_BASE_URL,
+        baseURL: import.meta.env.VITE_API_BASE_URL,
         headers: {
           ...param?.headers,
           Authorization: user ? `Bearer ${user.token}` : null,

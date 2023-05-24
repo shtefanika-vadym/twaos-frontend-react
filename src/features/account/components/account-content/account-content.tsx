@@ -14,6 +14,16 @@ export const AccountContent = () => {
   const { user } = useAuth()
   const { data = {} }: IRequestResponse = useFetchAccountDetailsQuery()
 
+  const fullName = (): string => {
+    const { first_name, initials, last_name } = data
+    let name: string
+    if (first_name) name = first_name
+    if (last_name) name += ` ${last_name}`
+    if (initials) name += ` ${initials}.`
+
+    return name
+  }
+
   return (
     <Flex w='100%' gap={10} direction='column'>
       <Title order={1}>{ACCOUNT_CONSTANTS.ACCOUNT}</Title>
@@ -21,7 +31,7 @@ export const AccountContent = () => {
       <TextInput
         disabled
         radius='md'
-        value={data.first_name}
+        value={fullName()}
         icon={<IconUser size='1rem' />}
         label={ACCOUNT_CONSTANTS.NAME_LABEL}
         placeholder={ACCOUNT_CONSTANTS.NAME_PLACEHOLDER}

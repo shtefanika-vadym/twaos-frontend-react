@@ -1,93 +1,132 @@
-import { useMemo } from 'react'
+import { useState } from 'react'
 
-import { Button, Flex, Group, Modal, Textarea, Title } from '@mantine/core'
-import { useForm } from '@mantine/form'
+import { Button, Flex, Menu, Title } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { IconFileAnalytics } from '@tabler/icons-react'
 import { MantineReactTable } from 'mantine-react-table'
+import { nanoid } from 'nanoid'
 
-import { useAuth } from 'app/hooks'
+import { useApiResponse, useAuth } from 'app/hooks'
 
 import { Show } from 'common/components'
 import { USER_ROLES } from 'common/constants'
-import { Utils } from 'common/utils'
+import type { ApiResponse, IRequestResponse, ITriggerRequest } from 'common/interfaces'
 
-import type { IHomeCertificate } from 'features/home/components/schemas/home.schema'
-import { HOME_CERTIFICATE_SCHEMA } from 'features/home/components/schemas/home.schema'
-import { HOME_CERTIFICATE_INIT_VALUE } from 'features/home/constants/home-form-value'
+import { HomeCreateCertificate } from 'features/home/components/home-create-certificate/home-create-certificate'
+import { HomeManageCertificate } from 'features/home/components/home-manage-certificate/home-manage-certificate'
+import { HOME_SECRETARY_COLUMNS, HOME_STUDENT_COLUMNS } from 'features/home/constants/home-columns'
 import { HOME_CONSTANTS } from 'features/home/constants/home.constants'
+import type { ICertificate } from 'features/home/interfaces/certificate.interface'
+import type { IManageCertificate } from 'features/home/interfaces/certificate.interface'
+import type { IHomeCertificate } from 'features/home/schemas/home-create-certificate.schema'
+import type { IHomeManageCertificate } from 'features/home/schemas/home-manage-certificate.schema'
+import {
+  useApproveCertificateMutation,
+  useCreateCertificateMutation,
+  useFetchCertificatesQuery,
+  useRejectCertificateMutation,
+} from 'features/home/store/api/home.api'
 
 export const HomeContent = () => {
   const { user } = useAuth()
-  const [opened, { open, close }] = useDisclosure(false)
+  const { processApiResponse } = useApiResponse()
+  const [selectedCertification, setSelectedCertification] = useState<IManageCertificate>(null)
+  const [openedCreate, { open: openCreateModal, close: closeCreateModal }] = useDisclosure(false)
+  const { data: certificates = [] }: IRequestResponse<ICertificate[]> = useFetchCertificatesQuery()
 
-  const form = useForm({
-    initialValues: HOME_CERTIFICATE_INIT_VALUE,
-    validate: (values: IHomeCertificate) =>
-      Utils.validateZodSchema(HOME_CERTIFICATE_SCHEMA, values),
-  })
+  const [createCertificate, { isLoading: isCreating }]: ITriggerRequest =
+    useCreateCertificateMutation()
 
-  const data = [
-    {
-      id: 'test',
-      status: 'confirmed',
-      date: 'test',
-      reason: 'Pentru Test',
-    },
-  ]
+  const [approveCertificate, { isLoading: isApproving }]: ITriggerRequest =
+    useApproveCertificateMutation()
 
-  const columns = useMemo(
-    () => [
-      {
-        accessorKey: 'id',
-        header: 'ID',
-      },
-      {
-        accessorKey: 'status',
-        header: 'Status',
-      },
-      {
-        accessorKey: 'date',
-        header: 'Date',
-      },
-      {
-        accessorKey: 'reason',
-        header: 'Reason',
-      },
-    ],
-    [],
-  )
+  const [rejectCertificate, { isLoading: isRejecting }]: ITriggerRequest =
+    useRejectCertificateMutation()
 
-  const handleSubmit = (values: IHomeCertificate): void => {
-    console.info(values)
+  const handleCreate = async (values: IHomeCertificate, reset: () => void): Promise<void> => {
+    const response: ApiResponse = await createCertificate(values)
+    processApiResponse(response, {
+      success: 'Certificate created',
+      successCallback: (): void => {
+        reset()
+        closeCreateModal()
+      },
+    })
+  }
+
+  const handleReject = async (values: IHomeManageCertificate, reset: () => void): Promise<void> => {
+    const response: ApiResponse = await rejectCertificate({
+      id: selectedCertification.id,
+      ...values,
+    })
+    processApiResponse(response, {
+      success: 'Certificate rejected',
+      successCallback: (): void => {
+        setSelectedCertification(null)
+        reset()
+      },
+    })
+  }
+
+  const handleApprove = async (
+    values: IHomeManageCertificate,
+    reset: () => void,
+  ): Promise<void> => {
+    const response: ApiResponse = await approveCertificate({
+      id: selectedCertification.id,
+      ...values,
+    })
+    processApiResponse(response, {
+      success: 'Certificate approved',
+      successCallback: (): void => {
+        setSelectedCertification(null)
+        reset()
+      },
+    })
   }
 
   return (
     <Flex w='100%' gap={10} direction='column'>
-      <Modal radius='md' opened={opened} onClose={close} title={HOME_CONSTANTS.CREATE_CERTIFICATE}>
-        <form onSubmit={form.onSubmit(handleSubmit)}>
-          <Textarea
-            required
-            autosize
-            radius='md'
-            label={HOME_CONSTANTS.REASON}
-            {...form.getInputProps('reason')}
-            placeholder={HOME_CONSTANTS.REASON_PLACEHOLDER}
-          />
-          <Group position='right' mt='xl'>
-            <Button type='submit' radius='md'>
-              {HOME_CONSTANTS.CREATE}
-            </Button>
-          </Group>
-        </form>
-      </Modal>
+      <HomeCreateCertificate
+        opened={openedCreate}
+        isLoading={isCreating}
+        close={closeCreateModal}
+        handleSubmit={handleCreate}
+      />
       <Title order={1}>{HOME_CONSTANTS.TITLE}</Title>
+      <HomeManageCertificate
+        handleReject={handleReject}
+        handleApprove={handleApprove}
+        certificate={selectedCertification}
+        isLoading={isApproving || isRejecting}
+        onClose={() => setSelectedCertification(null)}
+      />
       <MantineReactTable
-        columns={columns as any}
-        data={data}
+        enableRowActions={user.role === USER_ROLES.SECRETARY}
+        columns={
+          user.role === USER_ROLES.STUDENT ? (HOME_STUDENT_COLUMNS as any) : HOME_SECRETARY_COLUMNS
+        }
+        data={certificates}
+        renderRowActionMenuItems={({ row }): [JSX.Element, JSX.Element] => {
+          const rowData: ICertificate = row.original
+          return [
+            <Menu.Item
+              key={nanoid()}
+              disabled={rowData.status !== HOME_CONSTANTS.IN_PROGRESS}
+              onClick={() => setSelectedCertification({ id: rowData.id, type: 'approve' })}>
+              {HOME_CONSTANTS.APPROVE}
+            </Menu.Item>,
+            <Menu.Item
+              key={nanoid()}
+              disabled={rowData.status !== HOME_CONSTANTS.IN_PROGRESS}
+              onClick={() => setSelectedCertification({ id: rowData.id, type: 'reject' })}>
+              {HOME_CONSTANTS.REJECT}
+            </Menu.Item>,
+          ]
+        }}
         renderTopToolbarCustomActions={() => (
           <Show when={user.role === USER_ROLES.STUDENT}>
-            <Button color='teal' onClick={open} variant='filled'>
+            <Button color='teal' onClick={openCreateModal} variant='filled'>
               <IconFileAnalytics size='1rem' />
               {HOME_CONSTANTS.CREATE_CERTIFICATE}
             </Button>

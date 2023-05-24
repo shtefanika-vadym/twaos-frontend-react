@@ -15,4 +15,13 @@ const validateZodSchema = <T extends z.ZodType<any, any>>(
   }
 }
 
-export const Utils = { validateZodSchema }
+const downloadPdf = (data: string, fileName: string): void => {
+  const url: string = window.URL.createObjectURL(new Blob([data]))
+  const link: HTMLAnchorElement = document.createElement('a')
+  link.href = url
+  link.setAttribute('download', `${fileName}.pdf`)
+  window.document.body.appendChild(link)
+  link.click()
+}
+
+export const Utils = { validateZodSchema, downloadPdf }

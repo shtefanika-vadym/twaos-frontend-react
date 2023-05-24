@@ -85,6 +85,11 @@ export const UsersUploadForm: FC<IProps> = ({ handleSubmit }) => {
               {form.errors?.usersFile}
             </Text>
           </Show>
+          <Show when={form.values?.usersFile}>
+            <Text color='blue' size='sm' inline>
+              {form.values?.usersFile?.name}
+            </Text>
+          </Show>
         </Flex>
 
         <Flex direction='column' rowGap='sm'>
@@ -110,6 +115,11 @@ export const UsersUploadForm: FC<IProps> = ({ handleSubmit }) => {
           <Show when={form.errors?.secretariesFile}>
             <Text color='red' size='sm' inline>
               {form.errors?.secretariesFile}
+            </Text>
+          </Show>
+          <Show when={form.values?.secretariesFile}>
+            <Text color='blue' size='sm' inline>
+              {form.values?.secretariesFile?.name}
             </Text>
           </Show>
         </Flex>

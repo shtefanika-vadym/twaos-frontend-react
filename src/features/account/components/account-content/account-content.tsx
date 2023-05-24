@@ -17,14 +17,6 @@ export const AccountContent = () => {
   return (
     <Flex w='100%' gap={10} direction='column'>
       <Title order={1}>{ACCOUNT_CONSTANTS.ACCOUNT}</Title>
-      <TextInput
-        disabled
-        radius='md'
-        value={data.email}
-        icon={<IconAt size='1rem' />}
-        label={ACCOUNT_CONSTANTS.EMAIL_LABEL}
-        placeholder={ACCOUNT_CONSTANTS.EMAIL_PLACEHOLDER}
-      />
 
       <TextInput
         disabled
@@ -35,11 +27,42 @@ export const AccountContent = () => {
         placeholder={ACCOUNT_CONSTANTS.NAME_PLACEHOLDER}
       />
 
-      <Show when={user.role === USER_ROLES.STUDENT}>
+      <TextInput
+        disabled
+        radius='md'
+        value={data.email}
+        icon={<IconAt size='1rem' />}
+        label={ACCOUNT_CONSTANTS.EMAIL_LABEL}
+        placeholder={ACCOUNT_CONSTANTS.EMAIL_PLACEHOLDER}
+      />
+
+      <Show when={user.role !== USER_ROLES.ADMIN}>
         <TextInput
           disabled
           radius='md'
           value={data.faculty_name}
+          icon={<IconAlignJustified size='1rem' />}
+          label={ACCOUNT_CONSTANTS.FACULTY_NAME_LABEL}
+          placeholder={ACCOUNT_CONSTANTS.FACULTY_NAME_PLACEHOLDER}
+        />
+      </Show>
+
+      <Show when={user.role !== USER_ROLES.ADMIN}>
+        <TextInput
+          disabled
+          radius='md'
+          value={data.program_study}
+          icon={<IconAlignJustified size='1rem' />}
+          label={ACCOUNT_CONSTANTS.PROGRAM_STUDY_LABEL}
+          placeholder={ACCOUNT_CONSTANTS.PROGRAM_STUDY_PLACEHOLDER}
+        />
+      </Show>
+
+      <Show when={user.role === USER_ROLES.STUDENT}>
+        <TextInput
+          disabled
+          radius='md'
+          value={data.status}
           icon={<IconCoin size='1rem' />}
           label={ACCOUNT_CONSTANTS.FINANCIAL_STATUS_LABEL}
           placeholder={ACCOUNT_CONSTANTS.FINANCIAL_STATUS_PLACEHOLDER}

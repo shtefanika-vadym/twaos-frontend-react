@@ -2,11 +2,12 @@ import type { Middleware, Reducer } from '@reduxjs/toolkit'
 
 import { accountApi } from 'features/account'
 import { authApi } from 'features/auth'
+import { homeApi } from 'features/home'
 import { usersApi } from 'features/users'
 
 type ApiReducerObject = Record<string, Reducer>
 
-const APP_API_LIST = [authApi, accountApi, usersApi]
+const APP_API_LIST = [authApi, accountApi, usersApi, homeApi]
 
 const getAppMiddlewareList = (): Middleware[] => APP_API_LIST.map((api) => api.middleware)
 const getAppApiReducerList = (): ApiReducerObject =>

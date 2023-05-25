@@ -5,6 +5,7 @@ import { useLocalStorage } from 'react-use'
 
 import { useApiResponse } from 'app/hooks'
 import { AUTHORIZED_PATHS } from 'app/routes/config/authorized-config'
+import { UNAUTHORIZED_PATHS } from 'app/routes/config/unauthorized-config'
 
 import { LOCALE_STORAGE_KEYS } from 'common/constants'
 import type { ApiResponse, ITriggerRequest, IUser } from 'common/interfaces'
@@ -40,7 +41,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const handleLogout = (): void => {
     window.localStorage.clear()
-    window.location.reload()
+    navigate(UNAUTHORIZED_PATHS.LOGIN, { replace: true })
   }
 
   const value: IContextProps = useMemo(

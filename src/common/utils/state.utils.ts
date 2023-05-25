@@ -7,7 +7,7 @@ import { usersApi } from 'features/users'
 
 type ApiReducerObject = Record<string, Reducer>
 
-const APP_API_LIST = [authApi, accountApi, usersApi, homeApi]
+export const APP_API_LIST = [authApi, accountApi, usersApi, homeApi]
 
 const getAppMiddlewareList = (): Middleware[] => APP_API_LIST.map((api) => api.middleware)
 const getAppApiReducerList = (): ApiReducerObject =>

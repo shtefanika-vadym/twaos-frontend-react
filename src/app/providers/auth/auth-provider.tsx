@@ -8,7 +8,9 @@ import { AUTHORIZED_PATHS } from 'app/routes/config/authorized-config'
 import { UNAUTHORIZED_PATHS } from 'app/routes/config/unauthorized-config'
 
 import { LOCALE_STORAGE_KEYS } from 'common/constants'
+import { useAppDispatch } from 'common/hooks'
 import type { ApiResponse, ITriggerRequest, IUser } from 'common/interfaces'
+import { APP_API_LIST } from 'common/utils/state.utils'
 
 import type { IAuthLogin } from 'features/auth'
 import { useLoginMutation } from 'features/auth'
@@ -25,6 +27,7 @@ export const AuthContext = createContext<IContextProps | null>(null)
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate()
   const { processApiResponse } = useApiResponse()
+  const dispatch = useAppDispatch()
   const [doLogin, { isLoading }]: ITriggerRequest = useLoginMutation()
   const [user, setUser] = useLocalStorage<IUser>(LOCALE_STORAGE_KEYS.USER, null)
 
@@ -42,6 +45,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const handleLogout = (): void => {
     window.localStorage.clear()
     setUser(null)
+    APP_API_LIST.forEach((reducer): void => {
+      dispatch(reducer.util.resetApiState())
+    })
     navigate(UNAUTHORIZED_PATHS.LOGIN, { replace: true })
   }
 

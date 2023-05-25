@@ -10,6 +10,7 @@ export default defineConfig({
       app: '/src/app',
       common: '/src/common',
       features: '/src/features',
+      envDir: './buildConfig/environments',
     },
   },
 })

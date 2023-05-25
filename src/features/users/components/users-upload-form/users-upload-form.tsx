@@ -87,7 +87,7 @@ export const UsersUploadForm: FC<IProps> = ({ handleSubmit }) => {
           </Show>
           <Show when={form.values?.usersFile}>
             <Text color='blue' size='sm' inline>
-              {form.values?.usersFile?.name}
+              {(form.values?.usersFile as File)?.name}
             </Text>
           </Show>
         </Flex>
@@ -119,7 +119,7 @@ export const UsersUploadForm: FC<IProps> = ({ handleSubmit }) => {
           </Show>
           <Show when={form.values?.secretariesFile}>
             <Text color='blue' size='sm' inline>
-              {form.values?.secretariesFile?.name}
+              {(form.values?.secretariesFile as File)?.name}
             </Text>
           </Show>
         </Flex>

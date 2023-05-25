@@ -13,6 +13,8 @@ export const HOME_CONSTANTS = {
   CREATE_CERTIFICATE: 'Create certificate',
   NOTIFY_USER: 'Notify the user email about the changed status',
 
+  DOWNLOAD_MONTHLY_REPORT: 'Download monthly report',
+
   APPROVED: 'Aprobat',
   REJECTED: 'Respins',
   IN_PROGRESS: 'In procesare',

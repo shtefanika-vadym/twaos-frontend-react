@@ -13,6 +13,7 @@ import { USER_ROLES } from 'common/constants'
 import type { ApiResponse, IRequestResponse, ITriggerRequest } from 'common/interfaces'
 
 import { HomeCreateCertificate } from 'features/home/components/home-create-certificate/home-create-certificate'
+import { HomeDownloadPdf } from 'features/home/components/home-download-pdf/home-download-pdf'
 import { HomeManageCertificate } from 'features/home/components/home-manage-certificate/home-manage-certificate'
 import { HOME_SECRETARY_COLUMNS, HOME_STUDENT_COLUMNS } from 'features/home/constants/home-columns'
 import { HOME_CONSTANTS } from 'features/home/constants/home.constants'
@@ -125,12 +126,21 @@ export const HomeContent = () => {
           ]
         }}
         renderTopToolbarCustomActions={() => (
-          <Show when={user.role === USER_ROLES.STUDENT}>
-            <Button color='teal' onClick={openCreateModal} variant='filled'>
-              <IconFileAnalytics size='1rem' />
-              {HOME_CONSTANTS.CREATE_CERTIFICATE}
-            </Button>
-          </Show>
+          <>
+            <Show when={user.role === USER_ROLES.STUDENT}>
+              <Button color='teal' onClick={openCreateModal} variant='filled'>
+                <IconFileAnalytics size='1rem' />
+                {HOME_CONSTANTS.CREATE_CERTIFICATE}
+              </Button>
+            </Show>
+            <Show when={user.role === USER_ROLES.SECRETARY}>
+              <HomeDownloadPdf
+                type='button'
+                route='certificates/report'
+                value={HOME_CONSTANTS.DOWNLOAD_MONTHLY_REPORT}
+              />
+            </Show>
+          </>
         )}
       />
     </Flex>

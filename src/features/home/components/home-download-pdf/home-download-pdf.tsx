@@ -1,23 +1,31 @@
 import type { FC } from 'react'
+import { useToggle } from 'react-use'
 
-import { Anchor, Tooltip } from '@mantine/core'
+import { Anchor, Button, Tooltip } from '@mantine/core'
+import { IconFileAnalytics } from '@tabler/icons-react'
 import axios from 'axios'
 
 import { useAuth } from 'app/hooks'
+
+import { Show } from 'common/components'
 
 import { HOME_CONSTANTS } from 'features/home/constants/home.constants'
 
 interface IProps {
   route: string
   value: string | null
+  type?: 'anchor' | 'button'
 }
 
-export const HomeDownloadPdf: FC<IProps> = ({ route, value }) => {
+export const HomeDownloadPdf: FC<IProps> = ({ type = 'anchor', route, value }) => {
   const { user } = useAuth()
+  const [isLoading, toggleIsLoading] = useToggle(false)
+
   if (!value) return null
 
   const download = async (): Promise<void> => {
     try {
+      toggleIsLoading()
       const response = await axios({
         url: route,
         responseType: 'arraybuffer',
@@ -34,7 +42,7 @@ export const HomeDownloadPdf: FC<IProps> = ({ route, value }) => {
       const link: HTMLAnchorElement = document.createElement('a')
       link.href = url
 
-      link.setAttribute('download', `${value}.pdf`)
+      link.setAttribute('download', `${type === 'button' ? 'monthly-report' : value}.pdf`)
 
       document.body.appendChild(link)
       link.click()
@@ -42,12 +50,25 @@ export const HomeDownloadPdf: FC<IProps> = ({ route, value }) => {
       window.URL.revokeObjectURL(url)
     } catch (error) {
       console.error('Error downloading PDF:', error)
+    } finally {
+      toggleIsLoading()
     }
   }
 
   return (
-    <Tooltip label={HOME_CONSTANTS.DOWNLOAD_CERTIFICATE}>
-      <Anchor onClick={download}>{value}</Anchor>
-    </Tooltip>
+    <>
+      <Show
+        when={type === 'anchor'}
+        fallback={
+          <Button loading={isLoading} color='teal' onClick={download} variant='filled'>
+            <IconFileAnalytics size='1rem' />
+            {value}
+          </Button>
+        }>
+        <Tooltip label={HOME_CONSTANTS.DOWNLOAD_CERTIFICATE}>
+          <Anchor onClick={download}>{value}</Anchor>
+        </Tooltip>
+      </Show>
+    </>
   )
 }

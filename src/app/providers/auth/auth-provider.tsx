@@ -41,6 +41,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const handleLogout = (): void => {
     window.localStorage.clear()
+    setUser(null)
     navigate(UNAUTHORIZED_PATHS.LOGIN, { replace: true })
   }
 

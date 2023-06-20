@@ -1,6 +1,6 @@
 import type { FC } from 'react'
 
-import { Box, Button, Flex, Group, Modal, Select, Text, Title } from '@mantine/core'
+import { Box, Button, Flex, Group, LoadingOverlay, Modal, Select, Text, Title } from '@mantine/core'
 import { DatePicker } from '@mantine/dates'
 import { useForm } from '@mantine/form'
 import { useDisclosure } from '@mantine/hooks'
@@ -22,10 +22,11 @@ import { useFetchSecretariesQuery } from 'features/replacement/store/api/replace
 const { addDaysInDate } = Utils
 
 interface IProps {
-  handleReplace: (data: IReplacementCreate) => Promise<void>
+  isLoading: boolean
+  handleReplace: (data: IReplacementCreate, reset: () => void) => Promise<void>
 }
 
-export const ReplacementCreate: FC<IProps> = ({ handleReplace }) => {
+export const ReplacementCreate: FC<IProps> = ({ handleReplace, isLoading }) => {
   const [opened, { open, close }] = useDisclosure(false)
   const { data: secretaries }: IRequestResponse<ISelect[]> = useFetchSecretariesQuery()
   const form = useForm({
@@ -34,8 +35,11 @@ export const ReplacementCreate: FC<IProps> = ({ handleReplace }) => {
       Utils.validateZodSchema(REPLACEMENT_CREATE_SCHEMA, values),
   })
 
-  const handleSubmit = (values: IReplacementCreate): void => {
-    handleReplace(values)
+  const handleSubmit = (): void => {
+    handleReplace(form.values, handleClose)
+  }
+
+  const handleClose = (): void => {
     form.reset()
     close()
   }
@@ -51,66 +55,70 @@ export const ReplacementCreate: FC<IProps> = ({ handleReplace }) => {
       <Modal
         size='lg'
         radius='md'
+        zIndex={500}
         opened={opened}
-        onClose={close}
+        onClose={handleClose}
         title={REPLACEMENT_CONSTANTS.CREATE_REPLACEMENT}>
-        <form onSubmit={form.onSubmit(handleSubmit)}>
-          <Flex direction='column'>
-            <Box>
-              <Title mb={10} order={4}>
-                {REPLACEMENT_CONSTANTS.WHO_WILL_REPLACE_YOU}
-              </Title>
-              <Select
-                data={secretaries}
-                label={REPLACEMENT_CONSTANTS.SECRETARY_LABEL}
-                placeholder={REPLACEMENT_CONSTANTS.SECRETARY_LABEL}
-                {...form.getInputProps(REPLACEMENT_FORM_KEYS_CONSTANTS.SECRETARY_ID)}
-              />
-            </Box>
+        <Box pos='relative'>
+          <LoadingOverlay overlayBlur={2} visible={isLoading} />
+          <form onSubmit={form.onSubmit(handleSubmit)}>
+            <Flex direction='column'>
+              <Box>
+                <Title mb={10} order={4}>
+                  {REPLACEMENT_CONSTANTS.WHO_WILL_REPLACE_YOU}
+                </Title>
+                <Select
+                  data={secretaries}
+                  label={REPLACEMENT_CONSTANTS.SECRETARY_LABEL}
+                  placeholder={REPLACEMENT_CONSTANTS.SECRETARY_LABEL}
+                  {...form.getInputProps(REPLACEMENT_FORM_KEYS_CONSTANTS.SECRETARY_ID)}
+                />
+              </Box>
 
-            <Box mt={30}>
-              <Title mb={10} order={4}>
-                {REPLACEMENT_CONSTANTS.SELECT_DATE}
-              </Title>
-              <Flex gap={70} justify='center'>
-                <Box>
-                  <DatePicker
-                    maxLevel='year'
-                    minDate={addDaysInDate(new Date(), 1)}
-                    {...form.getInputProps(REPLACEMENT_FORM_KEYS_CONSTANTS.START_DATE)}
-                  />
-                  <Show when={form.errors?.start_date}>
-                    <Text color='red' size='xs' inline>
-                      {form.errors?.start_date}
-                    </Text>
-                  </Show>
-                </Box>
+              <Box mt={30}>
+                <Title mb={10} order={4}>
+                  {REPLACEMENT_CONSTANTS.SELECT_DATE}
+                </Title>
+                <Flex gap={70} justify='center'>
+                  <Box>
+                    <DatePicker
+                      maxLevel='year'
+                      minDate={addDaysInDate(new Date(), 1)}
+                      {...form.getInputProps(REPLACEMENT_FORM_KEYS_CONSTANTS.START_DATE)}
+                    />
+                    <Show when={form.errors?.start_date}>
+                      <Text color='red' size='xs' inline>
+                        {form.errors?.start_date}
+                      </Text>
+                    </Show>
+                  </Box>
 
-                <Box>
-                  <DatePicker
-                    maxLevel='year'
-                    minDate={addDaysInDate(new Date(form.values.start_date), 1)}
-                    {...form.getInputProps(REPLACEMENT_FORM_KEYS_CONSTANTS.END_DATE)}
-                  />
-                  <Show when={form.errors?.end_date}>
-                    <Text color='red' size='xs' inline>
-                      {form.errors?.end_date}
-                    </Text>
-                  </Show>
-                </Box>
-              </Flex>
-            </Box>
+                  <Box>
+                    <DatePicker
+                      maxLevel='year'
+                      minDate={addDaysInDate(new Date(form.values.start_date), 1)}
+                      {...form.getInputProps(REPLACEMENT_FORM_KEYS_CONSTANTS.END_DATE)}
+                    />
+                    <Show when={form.errors?.end_date}>
+                      <Text color='red' size='xs' inline>
+                        {form.errors?.end_date}
+                      </Text>
+                    </Show>
+                  </Box>
+                </Flex>
+              </Box>
 
-            <Group position='right' mt='xl'>
-              <Button onClick={close} radius='md' variant='outline'>
-                {BUTTON_CONSTANTS.CLOSE}
-              </Button>
-              <Button type='submit' radius='md'>
-                {BUTTON_CONSTANTS.CREATE}
-              </Button>
-            </Group>
-          </Flex>
-        </form>
+              <Group position='right' mt='xl'>
+                <Button onClick={handleClose} radius='md' variant='outline'>
+                  {BUTTON_CONSTANTS.CLOSE}
+                </Button>
+                <Button type='submit' radius='md'>
+                  {BUTTON_CONSTANTS.CREATE}
+                </Button>
+              </Group>
+            </Flex>
+          </form>
+        </Box>
       </Modal>
     </>
   )

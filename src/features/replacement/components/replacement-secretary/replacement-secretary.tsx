@@ -25,7 +25,7 @@ export const ReplacementSecretary = () => {
 
   const [createReplacement, { isLoading: isCreating }]: ITriggerRequest =
     useCreateReplacementMutation()
-  const handleReplace = async (data: IReplacementCreate): Promise<void> => {
+  const handleReplace = async (data: IReplacementCreate, reset: () => void): Promise<void> => {
     const adjustedData = {
       secretary_id: Number(data.secretary_id),
       end_date: formatDateToISO(data.end_date),
@@ -34,15 +34,20 @@ export const ReplacementSecretary = () => {
     const response: ApiResponse = await createReplacement(adjustedData)
     processApiResponse(response, {
       success: 'Replacement created',
+      successCallback: (): void => {
+        reset()
+      },
     })
   }
   return (
     <Box pos='relative'>
-      <LoadingOverlay visible={isCreating || isFetching} overlayBlur={2} />
+      <LoadingOverlay visible={isFetching} overlayBlur={2} />
       <MantineReactTable
         data={data}
         columns={REPLACEMENT_COLUMNS as any}
-        renderTopToolbarCustomActions={() => <ReplacementCreate handleReplace={handleReplace} />}
+        renderTopToolbarCustomActions={() => (
+          <ReplacementCreate handleReplace={handleReplace} isLoading={isCreating} />
+        )}
       />
     </Box>
   )

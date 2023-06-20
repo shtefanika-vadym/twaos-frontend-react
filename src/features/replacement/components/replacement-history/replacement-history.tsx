@@ -50,7 +50,7 @@ export const ReplacementHistory = () => {
       <MantineReactTable
         data={data}
         enableRowActions
-        columns={REPLACEMENT_COLUMNS}
+        columns={REPLACEMENT_COLUMNS as any}
         mantineTableBodyRowProps={({ row }) => {
           const rowData: IReplacement = row.original
 

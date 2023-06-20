@@ -3,4 +3,5 @@ export const REDUCER_NAMES = {
   HOME: 'home',
   USERS: 'users',
   ACCOUNT: 'account',
+  REPLACEMENT: 'replacement',
 }

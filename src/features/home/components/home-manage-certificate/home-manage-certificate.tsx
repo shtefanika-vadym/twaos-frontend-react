@@ -4,6 +4,7 @@ import { Button, Checkbox, Group, Modal, Textarea } from '@mantine/core'
 import { useForm } from '@mantine/form'
 
 import { Show } from 'common/components'
+import { BUTTON_CONSTANTS, STATUS_CONSTANTS } from 'common/constants'
 import { Utils } from 'common/utils'
 
 import { HOME_FORM_KEYS_CONSTANTS } from 'features/home/constants/home-form-keys.constants'
@@ -34,7 +35,7 @@ export const HomeManageCertificate: FC<IProps> = ({
       Utils.validateZodSchema(HOME_MANAGE_CERTIFICATE_SCHEMA, values),
   })
 
-  const isApprove: boolean = certificate?.type === 'approve'
+  const isApprove: boolean = certificate?.type === STATUS_CONSTANTS.APPROVED
 
   return (
     <Modal
@@ -69,10 +70,10 @@ export const HomeManageCertificate: FC<IProps> = ({
 
         <Group position='right' mt='xl'>
           <Button onClick={onClose} radius='md' variant='outline'>
-            {HOME_CONSTANTS.CLOSE}
+            {BUTTON_CONSTANTS.CLOSE}
           </Button>
           <Button radius='md' type='submit' loading={isLoading} color={isApprove ? 'green' : 'red'}>
-            {isApprove ? HOME_CONSTANTS.APPROVE : HOME_CONSTANTS.REJECT}
+            {isApprove ? BUTTON_CONSTANTS.APPROVE : BUTTON_CONSTANTS.REJECT}
           </Button>
         </Group>
       </form>

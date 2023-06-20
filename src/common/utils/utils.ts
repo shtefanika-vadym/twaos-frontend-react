@@ -24,4 +24,17 @@ const downloadPdf = (data: string, fileName: string): void => {
   link.click()
 }
 
-export const Utils = { validateZodSchema, downloadPdf }
+const addDaysInDate = (startDate: Date, count: number): Date => {
+  startDate.setDate(startDate.getDate() + count)
+  return startDate
+}
+
+const formatDateToISO = (date: Date): string => {
+  const year: number = date.getFullYear()
+  const month: string = String(date.getMonth() + 1).padStart(2, '0')
+  const day: string = String(date.getDate()).padStart(2, '0')
+
+  return `${year}-${month}-${day}`
+}
+
+export const Utils = { validateZodSchema, downloadPdf, addDaysInDate, formatDateToISO }

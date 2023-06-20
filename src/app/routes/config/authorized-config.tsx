@@ -5,18 +5,21 @@ import type { IRoute, INavLink } from 'common/interfaces'
 
 import { Account } from 'features/account'
 import { Home } from 'features/home'
+import { Replacement } from 'features/replacement'
 import { Users } from 'features/users'
 
 enum AUTHORIZED_ROUTES {
   HOME = 'HOME',
   USERS = 'USERS',
   ACCOUNT = 'ACCOUNT',
+  REPLACEMENTS = 'REPLACEMENTS',
 }
 
 export const AUTHORIZED_PATHS: Record<AUTHORIZED_ROUTES, string> = {
   [AUTHORIZED_ROUTES.HOME]: '/home',
   [AUTHORIZED_ROUTES.USERS]: '/users',
-  [AUTHORIZED_ROUTES.ACCOUNT]: '/account',
+  [AUTHORIZED_ROUTES.ACCOUNT]: '/replacement',
+  [AUTHORIZED_ROUTES.REPLACEMENTS]: '/replacements',
 }
 
 export const AUTHORIZED_NAVIGATION: INavLink[] = [
@@ -29,6 +32,11 @@ export const AUTHORIZED_NAVIGATION: INavLink[] = [
     label: 'Users',
     link: AUTHORIZED_PATHS.USERS,
     restrictedFor: [USER_ROLES.SECRETARY, USER_ROLES.STUDENT],
+  },
+  {
+    label: 'Replacements',
+    link: AUTHORIZED_PATHS.REPLACEMENTS,
+    restrictedFor: [USER_ROLES.STUDENT, USER_ROLES.ADMIN],
   },
   {
     label: 'Account',
@@ -50,6 +58,11 @@ export const AUTHORIZED_ROUTE_CONFIG: IRoute[] = [
     element: <Users />,
     path: AUTHORIZED_PATHS.USERS,
     restrictedFor: [USER_ROLES.SECRETARY, USER_ROLES.STUDENT],
+  },
+  {
+    element: <Replacement />,
+    path: AUTHORIZED_PATHS.REPLACEMENTS,
+    restrictedFor: [USER_ROLES.STUDENT, USER_ROLES.ADMIN],
   },
   {
     path: '*',

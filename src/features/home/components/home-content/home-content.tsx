@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { Button, Flex, Menu, Title } from '@mantine/core'
+import { Box, Button, Flex, Group, LoadingOverlay, Menu, Title } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { IconFileAnalytics } from '@tabler/icons-react'
 import { MantineReactTable } from 'mantine-react-table'
@@ -9,7 +9,7 @@ import { nanoid } from 'nanoid'
 import { useApiResponse, useAuth } from 'app/hooks'
 
 import { Show } from 'common/components'
-import { USER_ROLES } from 'common/constants'
+import { BUTTON_CONSTANTS, STATUS_CONSTANTS, USER_ROLES } from 'common/constants'
 import type { ApiResponse, IRequestResponse, ITriggerRequest } from 'common/interfaces'
 
 import { HomeCreateCertificate } from 'features/home/components/home-create-certificate/home-create-certificate'
@@ -17,8 +17,10 @@ import { HomeDownloadPdf } from 'features/home/components/home-download-pdf/home
 import { HomeManageCertificate } from 'features/home/components/home-manage-certificate/home-manage-certificate'
 import { HOME_SECRETARY_COLUMNS, HOME_STUDENT_COLUMNS } from 'features/home/constants/home-columns'
 import { HOME_CONSTANTS } from 'features/home/constants/home.constants'
-import type { ICertificate } from 'features/home/interfaces/certificate.interface'
-import type { IManageCertificate } from 'features/home/interfaces/certificate.interface'
+import type {
+  ICertificate,
+  IManageCertificate,
+} from 'features/home/interfaces/certificate.interface'
 import type { IHomeCertificate } from 'features/home/schemas/home-create-certificate.schema'
 import type { IHomeManageCertificate } from 'features/home/schemas/home-manage-certificate.schema'
 import {
@@ -33,7 +35,8 @@ export const HomeContent = () => {
   const { processApiResponse } = useApiResponse()
   const [selectedCertification, setSelectedCertification] = useState<IManageCertificate>(null)
   const [openedCreate, { open: openCreateModal, close: closeCreateModal }] = useDisclosure(false)
-  const { data: certificates = [] }: IRequestResponse<ICertificate[]> = useFetchCertificatesQuery()
+  const { data: certificates = [], isFetching: isFetching }: IRequestResponse<ICertificate[]> =
+    useFetchCertificatesQuery()
 
   const [createCertificate, { isLoading: isCreating }]: ITriggerRequest =
     useCreateCertificateMutation()
@@ -102,47 +105,59 @@ export const HomeContent = () => {
         isLoading={isApproving || isRejecting}
         onClose={() => setSelectedCertification(null)}
       />
-      <MantineReactTable
-        enableRowActions={user.role === USER_ROLES.SECRETARY}
-        columns={
-          user.role === USER_ROLES.STUDENT ? (HOME_STUDENT_COLUMNS as any) : HOME_SECRETARY_COLUMNS
-        }
-        data={certificates}
-        renderRowActionMenuItems={({ row }): [JSX.Element, JSX.Element] => {
-          const rowData: ICertificate = row.original
-          return [
-            <Menu.Item
-              key={nanoid()}
-              disabled={rowData.status !== HOME_CONSTANTS.IN_PROGRESS}
-              onClick={() => setSelectedCertification({ id: rowData.id, type: 'approve' })}>
-              {HOME_CONSTANTS.APPROVE}
-            </Menu.Item>,
-            <Menu.Item
-              key={nanoid()}
-              disabled={rowData.status !== HOME_CONSTANTS.IN_PROGRESS}
-              onClick={() => setSelectedCertification({ id: rowData.id, type: 'reject' })}>
-              {HOME_CONSTANTS.REJECT}
-            </Menu.Item>,
-          ]
-        }}
-        renderTopToolbarCustomActions={() => (
-          <>
-            <Show when={user.role === USER_ROLES.STUDENT}>
-              <Button color='teal' onClick={openCreateModal} variant='filled'>
-                <IconFileAnalytics size='1rem' />
-                {HOME_CONSTANTS.CREATE_CERTIFICATE}
-              </Button>
-            </Show>
-            <Show when={user.role === USER_ROLES.SECRETARY}>
-              <HomeDownloadPdf
-                type='button'
-                route='certificates/report'
-                value={HOME_CONSTANTS.DOWNLOAD_MONTHLY_REPORT}
-              />
-            </Show>
-          </>
-        )}
-      />
+
+      <Box pos='relative'>
+        <LoadingOverlay visible={isApproving || isRejecting || isFetching} overlayBlur={2} />
+        <MantineReactTable
+          enableRowActions={user.role === USER_ROLES.SECRETARY}
+          columns={
+            user.role === USER_ROLES.STUDENT
+              ? (HOME_STUDENT_COLUMNS as any)
+              : HOME_SECRETARY_COLUMNS
+          }
+          data={certificates}
+          renderRowActionMenuItems={({ row }): [JSX.Element, JSX.Element] => {
+            const rowData: ICertificate = row.original
+            return [
+              <Menu.Item
+                key={nanoid()}
+                disabled={rowData.status !== STATUS_CONSTANTS.PENDING}
+                onClick={() =>
+                  setSelectedCertification({ id: rowData.id, type: STATUS_CONSTANTS.APPROVED })
+                }>
+                {BUTTON_CONSTANTS.APPROVE}
+              </Menu.Item>,
+              <Menu.Item
+                key={nanoid()}
+                disabled={rowData.status !== STATUS_CONSTANTS.PENDING}
+                onClick={() =>
+                  setSelectedCertification({ id: rowData.id, type: STATUS_CONSTANTS.REJECTED })
+                }>
+                {BUTTON_CONSTANTS.REJECT}
+              </Menu.Item>,
+            ]
+          }}
+          renderTopToolbarCustomActions={() => (
+            <>
+              <Show when={user.role === USER_ROLES.STUDENT}>
+                <Button color='teal' onClick={openCreateModal} variant='filled'>
+                  <Group>
+                    <IconFileAnalytics size='1rem' />
+                    {HOME_CONSTANTS.CREATE_CERTIFICATE}
+                  </Group>
+                </Button>
+              </Show>
+              <Show when={user.role === USER_ROLES.SECRETARY}>
+                <HomeDownloadPdf
+                  type='button'
+                  route='certificates/report'
+                  value={HOME_CONSTANTS.DOWNLOAD_MONTHLY_REPORT}
+                />
+              </Show>
+            </>
+          )}
+        />
+      </Box>
     </Flex>
   )
 }

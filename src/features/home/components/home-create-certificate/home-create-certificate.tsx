@@ -3,6 +3,7 @@ import type { FC } from 'react'
 import { Button, Group, Modal, Textarea } from '@mantine/core'
 import { useForm } from '@mantine/form'
 
+import { BUTTON_CONSTANTS } from 'common/constants'
 import { Utils } from 'common/utils'
 
 import { HOME_FORM_KEYS_CONSTANTS } from 'features/home/constants/home-form-keys.constants'
@@ -37,10 +38,10 @@ export const HomeCreateCertificate: FC<IProps> = ({ opened, close, isLoading, ha
         />
         <Group position='right' mt='xl'>
           <Button onClick={close} radius='md' variant='outline'>
-            {HOME_CONSTANTS.CLOSE}
+            {BUTTON_CONSTANTS.CLOSE}
           </Button>
           <Button loading={isLoading} type='submit' radius='md'>
-            {HOME_CONSTANTS.CREATE}
+            {BUTTON_CONSTANTS.CREATE}
           </Button>
         </Group>
       </form>

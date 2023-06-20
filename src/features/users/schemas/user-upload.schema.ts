@@ -2,10 +2,10 @@ import * as z from 'zod'
 
 export const USERS_UPLOAD_SCHEMA = z.object({
   concatenateName: z.boolean(),
-  facultyName: z
-    .string()
-    .nullable()
-    .refine((data) => !!data, { message: 'Faculty name is required' }),
+  facultyName: z.string({
+    required_error: 'Faculty name is required',
+    invalid_type_error: 'Faculty name is required',
+  }),
   usersFile: z
     .object({})
     .nullable()

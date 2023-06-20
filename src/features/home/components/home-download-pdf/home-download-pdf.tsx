@@ -1,7 +1,7 @@
 import type { FC } from 'react'
 import { useToggle } from 'react-use'
 
-import { Anchor, Button, Tooltip } from '@mantine/core'
+import { Anchor, Button, Group, Tooltip } from '@mantine/core'
 import { IconFileAnalytics } from '@tabler/icons-react'
 import axios from 'axios'
 
@@ -61,8 +61,10 @@ export const HomeDownloadPdf: FC<IProps> = ({ type = 'anchor', route, value }) =
         when={type === 'anchor'}
         fallback={
           <Button loading={isLoading} color='teal' onClick={download} variant='filled'>
-            <IconFileAnalytics size='1rem' />
-            {value}
+            <Group>
+              <IconFileAnalytics size='1rem' />
+              {value}
+            </Group>
           </Button>
         }>
         <Tooltip label={HOME_CONSTANTS.DOWNLOAD_CERTIFICATE}>

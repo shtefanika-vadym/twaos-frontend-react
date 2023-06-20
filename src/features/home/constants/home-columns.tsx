@@ -1,7 +1,8 @@
 import { Badge } from '@mantine/core'
 
+import { STATUS_CONSTANTS } from 'common/constants'
+
 import { HomeDownloadPdf } from 'features/home/components/home-download-pdf/home-download-pdf'
-import { HOME_CONSTANTS } from 'features/home/constants/home.constants'
 
 export const HOME_STUDENT_COLUMNS = [
   {
@@ -25,8 +26,8 @@ export const HOME_STUDENT_COLUMNS = [
     header: 'Process status',
     Cell: ({ cell }: any) => {
       const value: string = cell.getValue()
-      const isRejected: boolean = value === HOME_CONSTANTS.REJECTED
-      const isApproved: boolean = value === HOME_CONSTANTS.APPROVED
+      const isRejected: boolean = value === STATUS_CONSTANTS.REJECTED
+      const isApproved: boolean = value === STATUS_CONSTANTS.APPROVED
       return <Badge color={isApproved ? 'green' : isRejected ? 'red' : 'yellow'}>{value}</Badge>
     },
   },
@@ -67,8 +68,8 @@ export const HOME_SECRETARY_COLUMNS = [
     header: 'Process status',
     Cell: ({ cell }: any) => {
       const value: string = cell.getValue()
-      const isRejected: boolean = value === HOME_CONSTANTS.REJECTED
-      const isApproved: boolean = value === HOME_CONSTANTS.APPROVED
+      const isRejected: boolean = value === STATUS_CONSTANTS.REJECTED
+      const isApproved: boolean = value === STATUS_CONSTANTS.APPROVED
       return <Badge color={isApproved ? 'green' : isRejected ? 'red' : 'yellow'}>{value}</Badge>
     },
   },
@@ -92,7 +93,10 @@ export const HOME_SECRETARY_COLUMNS = [
     accessorKey: 'user.field_study',
     header: 'Field study',
   },
-
+  {
+    accessorKey: 'user.program_study',
+    header: 'Program study',
+  },
   {
     accessorKey: 'created_at',
     header: 'Created at',

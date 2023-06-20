@@ -41,7 +41,7 @@ export const ReplacementSecretary = () => {
       <LoadingOverlay visible={isCreating || isFetching} overlayBlur={2} />
       <MantineReactTable
         data={data}
-        columns={REPLACEMENT_COLUMNS}
+        columns={REPLACEMENT_COLUMNS as any}
         renderTopToolbarCustomActions={() => <ReplacementCreate handleReplace={handleReplace} />}
       />
     </Box>

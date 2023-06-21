@@ -1,10 +1,12 @@
 import { Badge } from '@mantine/core'
+import type { MRT_ColumnDef } from 'mantine-react-table'
 
 import { STATUS_CONSTANTS } from 'common/constants'
 
 import { HomeDownloadPdf } from 'features/home/components/home-download-pdf/home-download-pdf'
+import type { ICertificate } from 'features/home/interfaces/certificate.interface'
 
-export const HOME_STUDENT_COLUMNS = [
+export const HOME_STUDENT_COLUMNS: MRT_ColumnDef<ICertificate>[] = [
   {
     accessorKey: 'certificateId',
     header: 'ID',
@@ -47,7 +49,7 @@ export const HOME_STUDENT_COLUMNS = [
   },
 ]
 
-export const HOME_SECRETARY_COLUMNS = [
+export const HOME_SECRETARY_COLUMNS: MRT_ColumnDef<ICertificate>[] = [
   {
     size: 0,
     accessorKey: 'certificateId',

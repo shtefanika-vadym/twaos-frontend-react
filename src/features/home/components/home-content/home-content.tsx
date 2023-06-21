@@ -1,8 +1,9 @@
 import { useState } from 'react'
 
 import { Box, Button, Flex, Group, LoadingOverlay, Menu, Title } from '@mantine/core'
-import { useDisclosure } from '@mantine/hooks'
+import { useDisclosure, useToggle } from '@mantine/hooks'
 import { IconFileAnalytics } from '@tabler/icons-react'
+import type { MRT_ColumnDef } from 'mantine-react-table'
 import { MantineReactTable } from 'mantine-react-table'
 
 import { useApiResponse, useAuth } from 'app/hooks'
@@ -30,8 +31,8 @@ import {
 export const HomeContent = () => {
   const { user } = useAuth()
   const { processApiResponse } = useApiResponse()
+  const [isDownloading, toggleIsDownloading] = useToggle()
   const [rejectCertificateId, setRejectCertificateId] = useState<number>(null)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [approveCertificateId, setApproveCertificateId] = useState<number>(null)
   const [openedCreate, { open: openCreateModal, close: closeCreateModal }] = useDisclosure(false)
   const { data: certificates = [], isFetching }: IRequestResponse<ICertificate[]> =
@@ -88,6 +89,25 @@ export const HomeContent = () => {
     })
   }
 
+  const updateHomeTableColumns = (columns: MRT_ColumnDef<ICertificate>[]) =>
+    columns.map((column: MRT_ColumnDef<ICertificate>) => {
+      if (column.accessorKey === 'certificateId') {
+        return {
+          ...column,
+          Cell: ({ cell, row }: any) => {
+            return (
+              <HomeDownloadPdf
+                value={cell.getValue()}
+                updateIsLoading={toggleIsDownloading}
+                route={`/certificates/${row.original.id}/download`}
+              />
+            )
+          },
+        }
+      }
+      return column
+    })
+
   return (
     <Flex w='100%' gap={10} direction='column'>
       <HomeCreateCertificate
@@ -110,13 +130,13 @@ export const HomeContent = () => {
       />
       <Title order={1}>{HOME_CONSTANTS.TITLE}</Title>
       <Box pos='relative'>
-        <LoadingOverlay overlayBlur={2} visible={isFetching || isCreating} />
+        <LoadingOverlay overlayBlur={2} visible={isFetching || isCreating || isDownloading} />
         <MantineReactTable
           enableRowActions={user.role === USER_ROLES.SECRETARY}
           columns={
             user.role === USER_ROLES.STUDENT
-              ? (HOME_STUDENT_COLUMNS as any)
-              : HOME_SECRETARY_COLUMNS
+              ? updateHomeTableColumns(HOME_STUDENT_COLUMNS)
+              : updateHomeTableColumns(HOME_SECRETARY_COLUMNS)
           }
           data={certificates}
           renderRowActionMenuItems={({ row }): [JSX.Element, JSX.Element] => {
@@ -150,6 +170,7 @@ export const HomeContent = () => {
                 <HomeDownloadPdf
                   type='button'
                   route='certificates/report'
+                  updateIsLoading={toggleIsDownloading}
                   value={HOME_CONSTANTS.DOWNLOAD_MONTHLY_REPORT}
                 />
               </Show>

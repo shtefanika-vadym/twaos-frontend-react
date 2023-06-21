@@ -15,9 +15,10 @@ interface IProps {
   route: string
   value: string | null
   type?: 'anchor' | 'button'
+  updateIsLoading?: () => void
 }
 
-export const HomeDownloadPdf: FC<IProps> = ({ type = 'anchor', route, value }) => {
+export const HomeDownloadPdf: FC<IProps> = ({ type = 'anchor', updateIsLoading, route, value }) => {
   const { user } = useAuth()
   const [isLoading, toggleIsLoading] = useToggle(false)
 
@@ -26,6 +27,7 @@ export const HomeDownloadPdf: FC<IProps> = ({ type = 'anchor', route, value }) =
   const download = async (): Promise<void> => {
     try {
       toggleIsLoading()
+      updateIsLoading()
       const response = await axios({
         url: route,
         responseType: 'arraybuffer',
@@ -52,6 +54,7 @@ export const HomeDownloadPdf: FC<IProps> = ({ type = 'anchor', route, value }) =
       console.error('Error downloading PDF:', error)
     } finally {
       toggleIsLoading()
+      updateIsLoading()
     }
   }
 
